@@ -15,10 +15,7 @@ console.ignoredYellowBox = ['MenuContext', 'Deprecation warning'];
 const App = () => (
   <MenuProvider>
     <View style={styles.rootStyle}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={colors.white}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <Navigator />

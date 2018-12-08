@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Perfi",
-    "scheme": "perfi",
+    "name": "BudgetApp",
+    "scheme": "BudgetApp",
     "description": "The best money manager",
-    "slug": "perfi",
+    "slug": "BudgetApp",
     "privacy": "public",
     "sdkVersion": "27.0.0",
     "packagerOpts": {
@@ -16,18 +16,17 @@
       "backgroundColor": "#27ae60",
       "barStyle": "dark-content"
     },
-    "icon": "./app/assets/images/app-icon.png",
     "splash": {
       "image": "./app/assets/images/splash.png",
       "resizeMode": "cover"
     },
     "version": "2.0.0",
     "android": {
-      "package": "com.apikodev.perfi"
+      "package": "com.netacx.budget"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.apiko.perfi"
+      "bundleIdentifier": "com.netacx.budget"
     }
   }
 }

@@ -1,51 +1,28 @@
 import React from 'react';
 import T from 'prop-types';
 import { View, ScrollView, Text } from 'react-native';
-import {
-  VictoryGroup,
-  VictoryChart,
-  VictoryLabel,
-  VictoryBar,
-  VictoryAxis,
-} from 'victory-native';
-import {
-  Subtitle,
-  Separator,
-  SimpleDateFilter,
-  Value,
-} from '../../components';
+import { VictoryGroup, VictoryChart, VictoryLabel, VictoryBar, VictoryAxis } from 'victory-native';
+import { Subtitle, Separator, SimpleDateFilter, Value } from '../../components';
 import s from './styles';
 import { colors, fontSizes } from '../../styles';
 import { formatMonthWithYear } from '../../utils/dateHelpers';
 
-const chartHeight = 375;
+const chartHeight = 300;
 const getChartWidth = length => (length * 60 + 60 < 400 ? 330 : length * 60 + 60);
 const getBarLabelPadding = (currentValue, maxValue) =>
-  (maxValue / currentValue < 3.5 ? ((chartHeight - 40) * currentValue / maxValue / 2) : -10);
+  maxValue / currentValue < 3.5 ? ((chartHeight - 40) * currentValue) / maxValue / 2 : -10;
 
-
-const Trends = ({
-    dateForFiltering,
-    onSetDateForFiltering,
-    stats,
-    setListRef,
-}) => (
+const Trends = ({ dateForFiltering, onSetDateForFiltering, stats, setListRef }) => (
   <View style={s.root}>
     <SimpleDateFilter
       dateForFiltering={dateForFiltering}
       setDateForFiltering={onSetDateForFiltering}
     />
-    <Subtitle
-      style={s.subtitle}
-      withLittlePadding
-      leftText="Trends"
-      date={dateForFiltering}
-    />
+    <Subtitle style={s.subtitle} withLittlePadding leftText="Trends" date={dateForFiltering} />
     <Separator />
 
     <View style={s.container}>
       <View style={s.chartContainer}>
-
         <ScrollView
           horizontal
           ref={setListRef}
@@ -125,7 +102,6 @@ const Trends = ({
           </VictoryChart>
         </ScrollView>
 
-
         <View style={s.verticalAxisContainer}>
           <VictoryAxis
             height={chartHeight}
@@ -153,23 +129,30 @@ const Trends = ({
       <View style={s.totalContainer}>
         <Text style={s.totalText}>Total: </Text>
         <View style={s.totalValueContainer}>
-          <Value
-            containerStyle={s.valueContainer}
-            style={s.valueText}
-            value={stats.totalIncome}
-          />
-          <Value
-            containerStyle={s.valueContainer}
-            style={s.valueText}
-            value={stats.totalExpense}
-          />
+          <Value containerStyle={s.valueContainer} style={s.valueText} value={stats.totalIncome} />
+          <Value containerStyle={s.valueContainer} style={s.valueText} value={stats.totalExpense} />
         </View>
-
+        <Separator />
+        <Text style={s.totalText}> Expected: </Text>
+        <View style={s.totalValueContainer}>
+          {stats.expectedExpense != 'Infinity' ? (
+            <View>
+              <Value
+                containerStyle={s.valueContainer}
+                style={s.valueText}
+                value={stats.expectedExpense}
+              />
+            </View>
+          ) : (
+            <Text containerStyle={s.valueContainer} style={s.valueText}>
+              No Data
+            </Text>
+          )}
+        </View>
       </View>
-
     </View>
   </View>
-  );
+);
 
 Trends.propTypes = {
   dateForFiltering: T.object,

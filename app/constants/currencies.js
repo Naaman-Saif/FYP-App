@@ -11,4 +11,8 @@ export default {
     name: '₴ - Hryvnia',
     sign: '₴',
   },
+  rupees:{
+    name: 'Rs. - Rupees',
+    sign: 'Rs.'
+  }
 };

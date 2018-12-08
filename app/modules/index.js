@@ -7,17 +7,11 @@ import transactions from './transactions';
 import transfers from './transfers';
 import navigator from './navigator';
 import settings from './settings';
-
+import facebook from './facebook';
 
 const config = {
   key: 'root',
-  whitelist: [
-    'settings',
-    'accounts',
-    'categories',
-    'transactions',
-    'transfers',
-  ],
+  whitelist: ['settings', 'accounts', 'categories', 'transactions', 'transfers'],
   storage: AsyncStorage,
 };
 
@@ -29,7 +23,7 @@ const appReducer = {
   transfers,
   navigator,
   settings,
+  facebook,
 };
-
 
 export default persistCombineReducers(config, appReducer);

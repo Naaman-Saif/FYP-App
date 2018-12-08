@@ -20,7 +20,7 @@ const Settings = ({
       <Subtitle leftText="Choose a currency" />
       <Select
         isShowScroll={false}
-        options={[currencies.dollar, currencies.euro, currencies.hryvnia]}
+        options={[currencies.dollar, currencies.euro, currencies.rupees]}
         containerStyle={s.selectorContainer}
         style={s.selector}
         defaultValue={currency}
@@ -44,14 +44,6 @@ const Settings = ({
           backgroundColor={colors.red}
         />
       </View>
-    </View>
-    <View style={s.secondContainer}>
-      <Text style={s.text}>Made with ❤️ by</Text>
-      <Icon
-        name="apikoLogo"
-        width={80}
-        height={24}
-      />
     </View>
 
   </ScreenWrapper>

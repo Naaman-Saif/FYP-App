@@ -17,13 +17,6 @@ const Icon = (props) => {
       onPress={onPress}
       style={containerStyle}
     >
-      <SvgIcon
-        width={14}
-        height={14}
-        fill={color || colors.icon}
-        {...icon}
-        svgs={svgs}
-      />
     </Root>
   );
 };

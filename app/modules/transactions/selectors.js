@@ -12,39 +12,36 @@ const getCategoryTypeForFiltering = (_, props) => R.pathOr('0', ['selectedTabInd
 const getAccountsEntities = state => R.pathOr({}, ['accounts', 'byId'], state);
 const getAccountId = (_, props) => R.pathOr('0', ['accountId'], props);
 
-
 export const getTransactions = createSelector(
   [getTransactionsIds, getTransactionsEntities, getDateForFiltering],
   (transIds, transEnt, date) => {
     const newArray = [];
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
-      const period = !date.format ?
-        date : { from: +date.startOf('day'), to: +date.endOf('day') };
+      const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date)) {
         newArray.push(transaction);
       }
     });
 
     return newArray;
-  },
+  }
 );
 
 export const getFavouritesTransactions = createSelector(
   [getTransactionsIds, getTransactionsEntities, getDateForFiltering],
   (transIds, transEnt, date) => {
     const newArray = [];
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
-      const period = !date.format ?
-        date : { from: +date.startOf('day'), to: +date.endOf('day') };
+      const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date) && transaction.isFavourite) {
         newArray.push(transaction);
       }
     });
 
     return newArray;
-  },
+  }
 );
 
 export const getAccountsStats = createSelector(
@@ -59,7 +56,7 @@ export const getAccountsStats = createSelector(
   (transIds, transEnt, date, categorEnt, categorType, accountsEnt) => {
     const data = {};
     const type = categorType === 0 ? types.income : types.expense;
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
       const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date) && categorEnt[transaction.category].type === type) {
@@ -71,24 +68,17 @@ export const getAccountsStats = createSelector(
       }
     });
     const res = [];
-    R.forEachObjIndexed(
-      (value, key) => {
-        res.push({ x: key, y: Math.abs(value.value), fill: value.color, name: value.accName });
-      }, data
-    );
+    R.forEachObjIndexed((value, key) => {
+      res.push({ x: key, y: Math.abs(value.value), fill: value.color, name: value.accName });
+    }, data);
     // [{ x: 1, y: 1, fill: "#c43a31" }]
     return res;
-  },
+  }
 );
 
 // TODO Refactor selectors
 export const getTrendsStats = createSelector(
-  [
-    getTransactionsIds,
-    getTransactionsEntities,
-    getDateForFiltering,
-    getCategoriesEntities,
-  ],
+  [getTransactionsIds, getTransactionsEntities, getDateForFiltering, getCategoriesEntities],
   (transIds, transEnt, date, categorEnt) => {
     const data = {
       Income: {},
@@ -105,8 +95,11 @@ export const getTrendsStats = createSelector(
     const initialValue = {};
 
     if (monthsDiff <= 12) {
-      for (let i = 0; i <= monthsDiff; i++) { // eslint-disable-line
-        const key = moment(date.to).subtract(i, 'months').startOf('month');
+      for (let i = 0; i <= monthsDiff; i++) {
+        // eslint-disable-line
+        const key = moment(date.to)
+          .subtract(i, 'months')
+          .startOf('month');
         initialValue[key] = 0;
         data.tickValues.push(key.toString());
       }
@@ -114,13 +107,15 @@ export const getTrendsStats = createSelector(
       data.Expense = initialValue;
     }
 
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
       const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date)) {
         const type = categorEnt[transaction.category].type;
 
-        const startOfMonth = moment(transaction.date).startOf('month').toString();
+        const startOfMonth = moment(transaction.date)
+          .startOf('month')
+          .toString();
 
         if (!data.tickValues.includes(startOfMonth.toString())) {
           data.tickValues.push(startOfMonth.toString());
@@ -150,35 +145,41 @@ export const getTrendsStats = createSelector(
     let Income = [];
     let Expense = [];
 
-    R.forEachObjIndexed((val, key) => { Income.push({ y: val, date: key }); }, data.Income);
-    R.forEachObjIndexed((val, key) => { Expense.push({ y: val, date: key }); }, data.Expense);
+    R.forEachObjIndexed((val, key) => {
+      Income.push({ y: val, date: key });
+    }, data.Income);
+    R.forEachObjIndexed((val, key) => {
+      Expense.push({ y: val, date: key });
+    }, data.Expense);
 
     Income.sort((a, b) => +moment(a.date) - +moment(b.date));
     Expense.sort((a, b) => +moment(a.date) - +moment(b.date));
 
     data.tickValues.sort((a, b) => +moment(a) - +moment(b));
 
-  /**
-   * if don't have any statistic per all time,
-   * show on the chart only today data with
-   * expense and income which equals 0
-   */
+    /**
+     * if don't have any statistic per all time,
+     * show on the chart only today data with
+     * expense and income which equals 0
+     */
     if (R.isEmpty(Income) && R.isEmpty(Expense) && R.isEmpty(data.tickValues)) {
       Income = [{ date: new Date(), x: 1, y: 0 }];
       Expense = [{ date: new Date(), x: 1, y: 0 }];
       data.tickValues = [new Date().toString()];
     }
 
-    Income.forEach((element, id) => element.x = id + 1); // eslint-disable-line
-    Expense.forEach((element, id) => element.x = id + 1); // eslint-disable-line
+    Income.forEach((element, id) => (element.x = id + 1)); // eslint-disable-line
+    Expense.forEach((element, id) => (element.x = id + 1)); // eslint-disable-line
 
     const coeff = +`1${R.join('', R.repeat('0', Math.round(data.maxValue).toString().length - 1))}`;
 
     /**
      * if maxValue = 0, set it 10 (for correct showing charts)
      */
-    const maxValue = (Math.ceil(data.maxValue / coeff) * coeff) || 10;
 
+    const maxValue = Math.ceil(data.maxValue / coeff) * coeff || 10;
+    const expectedExpense = -Math.round((data.totalExpense * -1) / monthsDiff);
+    console.log(expectedExpense);
     return {
       Income,
       Expense,
@@ -186,8 +187,9 @@ export const getTrendsStats = createSelector(
       maxValue,
       totalIncome: Math.round(data.totalIncome),
       totalExpense: -Math.round(data.totalExpense),
+      expectedExpense,
     };
-  },
+  }
 );
 
 export const getCategoriesStats = createSelector(
@@ -202,7 +204,7 @@ export const getCategoriesStats = createSelector(
     const data = {};
     let total = 0;
     const type = categorType === 0 ? types.income : types.expense;
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
       const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date) && categorEnt[transaction.category].type === type) {
@@ -214,37 +216,29 @@ export const getCategoriesStats = createSelector(
       }
     });
     const res = [];
-    R.forEachObjIndexed(
-      (val, key) => {
-        res.push({
-          id: key,
-          name: val.name,
-          value: val.value,
-          percent: Math.round(val.value * 1000 / total) / 10,
-        });
-      }, data
-    );
+    R.forEachObjIndexed((val, key) => {
+      res.push({
+        id: key,
+        name: val.name,
+        value: val.value,
+        percent: Math.round((val.value * 1000) / total) / 10,
+      });
+    }, data);
     return res;
-  },
+  }
 );
 
 export const getCurrentAccountTransaction = createSelector(
-  [
-    getTransactionsIds,
-    getTransactionsEntities,
-    getDateForFiltering,
-    getAccountId,
-  ],
+  [getTransactionsIds, getTransactionsEntities, getDateForFiltering, getAccountId],
   (transIds, transEnt, date, accId) => {
     const newArray = [];
-    transIds.forEach((id) => {
+    transIds.forEach(id => {
       const transaction = transEnt[id];
-      const period = !date.format ?
-        date : { from: +date.startOf('day'), to: +date.endOf('day') };
+      const period = !date.format ? date : { from: +date.startOf('day'), to: +date.endOf('day') };
       if (inPeriod(period, transaction.date) && transaction.account === accId) {
         newArray.push(transaction);
       }
     });
     return newArray;
-  },
+  }
 );

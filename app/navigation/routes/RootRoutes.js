@@ -6,11 +6,15 @@ import {
   TransactionsNavigator,
   TrendsNavigator,
   FavouritesNavigator,
+  TodoNavigator
 } from '../navigators';
 
 const Routes = {
   [screens.TransactionsRoot]: {
     screen: TransactionsNavigator,
+  },
+  [screens.TodoRoot]:{
+    screen:TodoNavigator,
   },
   [screens.AccountsRoot]: {
     screen: AccountsNavigator,
